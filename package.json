@@ -1,5 +1,5 @@
 {
-  "name": "@victozee26/fasync",
+  "name": "fasync",
   "version": "1.0.0",
   "description": "A package to wrap functions and make them behave like fake async functions with configurable delay and failure rate.",
   "main": "index.js",
