@@ -1,10 +1,10 @@
-// Example usage of fasync package
+// Example usage of fakesync package
 
-const fasync = require('./index');
+const fakesync = require('./index');
 
 // Set global default options (optional)
 // This sets defaults that can be overridden per register call
-fasync.registerDefaults({
+fakesync.registerDefaults({
   minDelay: 100,  // minimum delay in ms
   maxDelay: 1000, // maximum delay in ms
   failRate: 0.1   // 10% chance of failure
@@ -24,9 +24,9 @@ async function asyncFunc(x) {
   });
 }
 
-// Register the functions with fasync
+// Register the functions with fakesync
 // Options here will override defaults
-fasync.register({
+fakesync.register({
   syncFunc,
   asyncFunc
 }, {
@@ -40,7 +40,7 @@ fasync.register({
 (async () => {
   console.log('Testing sync function:');
   try {
-    const result1 = await fasync.syncFunc(5);
+    const result1 = await fakesync.syncFunc(5);
     console.log('syncFunc result:', result1);
   } catch (e) {
     console.log('syncFunc failed:', e.message);
@@ -48,7 +48,7 @@ fasync.register({
 
   console.log('\nTesting async function:');
   try {
-    const result2 = await fasync.asyncFunc(5);
+    const result2 = await fakesync.asyncFunc(5);
     console.log('asyncFunc result:', result2);
   } catch (e) {
     console.log('asyncFunc failed:', e.message);

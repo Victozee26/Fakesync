@@ -1,20 +1,22 @@
 # fasync
 
-A minimal JavaScript package to wrap functions and make them behave like fake async functions with configurable delay and failure rate.
+fakesync makes it easy to turn any function into a fake async call for front-end testing. You can add delays, simulate failures, and make fake data behave like it’s coming from a real back-end. It’s small, simple, and doesn’t require a full mock server—perfect when you just need realistic responses without extra setup.
 
 ## Installation
 
-Since this is a local package, require it directly:
-
+Install from npm:
 ```js
-const fasync = require('./index');
+npm install fakesync
 ```
 
-For npm publishing later, you can publish it and install via npm.
+Or require locally if testing:
+```js
+const fakesync = require('./index');
+```
 
 ## API
 
-### `fasync.registerDefaults(options)`
+### `fakesync.registerDefaults(options)`
 
 Set global default options.
 
@@ -22,31 +24,36 @@ Set global default options.
 - `options.maxDelay`: Maximum delay in ms (default 500)
 - `options.failRate`: Probability of rejection (0-1, default 0)
 
-### `fasync.register(funcs, options)`
+### `fakesync.register(funcs, options)`
 
 Register functions to be wrapped.
 
 - `funcs`: Object with function names as keys and functions as values
 - `options`: Override options for these functions
 
-After registering, `fasync.funcName()` returns a Promise that resolves with the original return value after a random delay, or rejects based on failRate.
+After registering, `fakesync.funcName()` returns a Promise that resolves with the original return value after a random delay, or rejects based on failRate.
 
 ## Example
 
 See `example.js` for a complete example.
 
 ```js
-const fasync = require('./index');
+const fakesync = require('fakesync');
 
-fasync.registerDefaults({ minDelay: 100, maxDelay: 1000, failRate: 0.1 });
+fakesync.registerDefaults({ minDelay: 100, maxDelay: 1000, failRate: 0.1 });
 
 function mySyncFunc(x) {
   return x * 2;
 }
 
-fasync.register({ mySyncFunc });
+fakesync.register({ mySyncFunc });
 
 (async () => {
-  const result = await fasync.mySyncFunc(5); // 10, after delay
+  try {
+    const result = await fakesync.mySyncFunc(5); // 10, after random delay
+    console.log(result);
+  } catch (err) {
+    console.error('Function failed:', err);
+  }
 })();
 ```

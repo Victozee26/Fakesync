@@ -1,14 +1,32 @@
 {
-  "name": "fasync",
-  "version": "1.0.0",
-  "description": "A package to wrap functions and make them behave like fake async functions with configurable delay and failure rate.",
+  "name": "fakesync",
+  "version": "1.0.1",
+  "description": "Wrap functions to behave like async calls with configurable delay and failures for front-end testing.",
   "main": "index.js",
   "publishConfig": {
     "access": "public"
   },
   "scripts": {
-    "test": "node example.js"
+    "example": "node example.js",
+    "test": "echo \"No tests yet\" && exit 0"
   },
-  "author": "",
-  "license": "ISC"
+  "keywords": [
+    "async",
+    "mock",
+    "fake",
+    "frontend",
+    "testing",
+    "javascript",
+    "fakebackend"
+  ],
+  "author": "Victor Elijha <victorelijha@gmail.com>",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Victozee26/FakeAsync.git"
+  },
+  "bugs": {
+    "url": "https://github.com/Victozee26/FakeAsync/issues"
+  },
+  "homepage": "https://github.com/Victozee26/FakeAsync#readme"
 }

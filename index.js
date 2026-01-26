@@ -1,7 +1,7 @@
-// fasync: A package to wrap functions and make them behave like fake async functions
+// fakesync: A package to wrap functions and make them behave like fake async functions
 // with configurable delay and failure rate.
 
-const fasync = {
+const fakesync = {
   // Store global default options
   defaults: {},
 
@@ -54,4 +54,4 @@ const fasync = {
   }
 };
 
-module.exports = fasync;
+module.exports = fakesync;
