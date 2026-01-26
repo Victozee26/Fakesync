@@ -1,4 +1,4 @@
-# fasync
+# Fakesync
 
 fakesync makes it easy to turn any function into a fake async call for front-end testing. You can add delays, simulate failures, and make fake data behave like it’s coming from a real back-end. It’s small, simple, and doesn’t require a full mock server—perfect when you just need realistic responses without extra setup.
 
@@ -57,3 +57,7 @@ fakesync.register({ mySyncFunc });
   }
 })();
 ```
+
+**please feel free to contribute 🙏**
+
+**Updates Loading…**
