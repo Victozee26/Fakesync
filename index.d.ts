@@ -8,17 +8,15 @@ export interface FakeSyncFunctions {
   [key: string]: (...args: any[]) => any;
 }
 
-export interface FakeSyncWrappedFunctions {
-  [key: string]: (...args: any[]) => Promise<any>;
-}
-
-export type FakeSync = FakeSyncWrappedFunctions & {
+export interface FakeSync {
   defaults: FakeSyncOptions;
   registerDefaults(options: FakeSyncOptions): void;
   register(funcs: FakeSyncFunctions, options?: FakeSyncOptions): void;
-};
+  // Allow accessing any registered function as a property returning a Promise
+  [name: string]: any;
+}
 
 declare const fakesync: FakeSync;
 
-export default fakesync;
-export { fakesync };
+export = fakesync;
+export as namespace fakesync;
