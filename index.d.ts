@@ -18,5 +18,4 @@ export interface FakeSync {
 
 declare const fakesync: FakeSync;
 
-export = fakesync;
-export as namespace fakesync;
+export default fakesync;
