@@ -61,3 +61,18 @@ fakesync.register({ mySyncFunc });
 **please feel free to contribute 🙏**
 
 **Updates Loading…**
+
+## TypeScript
+
+This package provides a declaration file so TypeScript-aware editors and
+tooling can understand dynamically registered functions. After installing,
+you can import normally and call your registered handlers with type help:
+
+```ts
+import fakesync from 'fakesync';
+
+fakesync.register({ handleSignInClick: () => {/* ... */} });
+
+// TypeScript will understand fakesync.handleSignInClick exists at runtime
+// but may still be `any`-typed unless you declare a stronger signature.
+```

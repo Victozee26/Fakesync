@@ -1,6 +1,16 @@
 // fakesync: A package to wrap functions and make them behave like fake async functions
 // with configurable delay and failure rate.
 
+/**
+ * @typedef {import('./index.d').FakeSyncOptions} FakeSyncOptions
+ * @typedef {import('./index.d').FakeSyncFunctions} FakeSyncFunctions
+ */
+
+/**
+ * Main fakesync object. Annotated with the d.ts types so TypeScript/ESLint
+ * pick up that dynamically registered functions exist and return Promises.
+ * @type {import('./index.d').FakeSync}
+ */
 const fakesync = {
   // Store global default options
   defaults: {},
@@ -18,37 +28,31 @@ const fakesync = {
     const opts = { ...this.defaults, ...options };
     const { minDelay = 0, maxDelay = 500, failRate = 0 } = opts;
 
-    // For each function, create a wrapped version that returns a Promise
+    // For each function, create a wrapped async version that always returns a Promise
     for (const [name, func] of Object.entries(funcs)) {
-      this[name] = (...args) => {
-        return new Promise((resolve, reject) => {
-          // Calculate random delay between minDelay and maxDelay
-          const delay = Math.random() * (maxDelay - minDelay) + minDelay;
+      /**
+       * Wrapped function that resolves after a random delay and may fail
+       * @param  {...any} args
+       * @returns {Promise<any>}
+       */
+      this[name] = async (...args) => {
+        const delay = Math.random() * (maxDelay - minDelay) + minDelay;
 
-          // Wait for the delay, then execute the function
-          setTimeout(() => {
-            // Check if we should simulate a failure
-            if (Math.random() < failRate) {
-              reject(new Error('Simulated failure'));
-            } else {
-              try {
-                // Call the original function
-                const result = func(...args);
+        // Wait for the random delay
+        await new Promise((res) => setTimeout(res, delay));
 
-                // If the result is a Promise (async function), wait for it
-                if (result instanceof Promise) {
-                  result.then(resolve).catch(reject);
-                } else {
-                  // Otherwise, resolve immediately with the result
-                  resolve(result);
-                }
-              } catch (e) {
-                // If the function throws synchronously, reject
-                reject(e);
-              }
-            }
-          }, delay);
-        });
+        // Simulate failure based on failRate
+        if (Math.random() < failRate) {
+          throw new Error('Simulated failure');
+        }
+
+        // Execute the original function; if it returns a promise we await it
+        try {
+          const result = func(...args);
+          return await result;
+        } catch (e) {
+          throw e;
+        }
       };
     }
   }
