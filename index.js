@@ -28,14 +28,16 @@ const fakesync = {
     const opts = { ...this.defaults, ...options };
     const { minDelay = 0, maxDelay = 500, failRate = 0 } = opts;
 
-    // For each function, create a wrapped async version that always returns a Promise
+    // Build a new object with wrapped async functions (no mutation)
+    const wrapped = {};
+
     for (const [name, func] of Object.entries(funcs)) {
       /**
        * Wrapped function that resolves after a random delay and may fail
        * @param  {...any} args
        * @returns {Promise<any>}
        */
-      this[name] = async (...args) => {
+      wrapped[name] = async (...args) => {
         const delay = Math.random() * (maxDelay - minDelay) + minDelay;
 
         // Wait for the random delay
@@ -55,6 +57,8 @@ const fakesync = {
         }
       };
     }
+
+    return wrapped;
   }
 };
 

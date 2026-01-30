@@ -31,7 +31,7 @@ Register functions to be wrapped.
 - `funcs`: Object with function names as keys and functions as values
 - `options`: Override options for these functions
 
-After registering, `fakesync.funcName()` returns a Promise that resolves with the original return value after a random delay, or rejects based on failRate.
+After registering, `fakesync.register({...})` returns an object whose methods are Promise-returning wrappers around the original functions. Call the returned methods (not properties added to the `fakesync` object) to get the delayed/possibly failing behavior.
 
 ## Example
 
@@ -46,11 +46,11 @@ function mySyncFunc(x) {
   return x * 2;
 }
 
-fakesync.register({ mySyncFunc });
+const api = fakesync.register({ mySyncFunc });
 
 (async () => {
   try {
-    const result = await fakesync.mySyncFunc(5); // 10, after random delay
+    const result = await api.mySyncFunc(5); // 10, after random delay
     console.log(result);
   } catch (err) {
     console.error('Function failed:', err);

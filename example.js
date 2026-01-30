@@ -24,9 +24,9 @@ async function asyncFunc(x) {
   });
 }
 
-// Register the functions with fakesync
+// Register the functions with fakesync and get back wrapped functions
 // Options here will override defaults
-fakesync.register({
+const api = fakesync.register({
   syncFunc,
   asyncFunc
 }, {
@@ -40,7 +40,7 @@ fakesync.register({
 (async () => {
   console.log('Testing sync function:');
   try {
-    const result1 = await fakesync.syncFunc(5);
+    const result1 = await api.syncFunc(5);
     console.log('syncFunc result:', result1);
   } catch (e) {
     console.log('syncFunc failed:', e.message);
@@ -48,7 +48,7 @@ fakesync.register({
 
   console.log('\nTesting async function:');
   try {
-    const result2 = await fakesync.asyncFunc(5);
+    const result2 = await api.asyncFunc(5);
     console.log('asyncFunc result:', result2);
   } catch (e) {
     console.log('asyncFunc failed:', e.message);
