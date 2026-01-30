@@ -1,21 +1,22 @@
-export interface FakeSyncOptions {
-  minDelay?: number;
-  maxDelay?: number;
-  failRate?: number;
+declare module 'fakesync' {
+  export interface FakeSyncOptions {
+    minDelay?: number;
+    maxDelay?: number;
+    failRate?: number;
+  }
+
+  export interface FakeSync {
+    defaults: FakeSyncOptions;
+    registerDefaults(options: FakeSyncOptions): void;
+    register<T extends Record<string, (...args: unknown[]) => unknown>>(
+      funcs: T,
+      options?: FakeSyncOptions
+    ): {
+      [K in keyof T]: (...args: Parameters<T[K]>) => Promise<Awaited<ReturnType<T[K]>>>;
+    };
+  }
+
+  const fakesync: FakeSync;
+  export default fakesync;
+  export { fakesync };
 }
-
-export interface FakeSyncFunctions {
-  [key: string]: (...args: any[]) => any;
-}
-
-export interface FakeSync {
-  defaults: FakeSyncOptions;
-  registerDefaults(options: FakeSyncOptions): void;
-  register(funcs: FakeSyncFunctions, options?: FakeSyncOptions): void;
-  [key: string]: ((...args: any[]) => Promise<any>) | any;
-}
-
-declare const fakesync: FakeSync;
-
-export default fakesync;
-export { fakesync };

@@ -1,63 +1,60 @@
-# Fakesync
+# fakesync
 
-fakesync makes it easy to turn any function into a fake async call for front-end testing. You can add delays, simulate failures, and make fake data behave like it’s coming from a real back-end. It’s small, simple, and doesn’t require a full mock server—perfect when you just need realistic responses without extra setup.
+fakesync wraps synchronous or async functions so they behave like async
+calls with configurable delay and simulated failures. It's intentionally
+small and dependency-free — useful for frontend development and tests.
 
-## Installation
+Quick summary
+- `registerDefaults(options)` — set global `minDelay`, `maxDelay`, `failRate`.
+- `register(funcs, options)` — returns a new object mapping each function
+  to a Promise-returning wrapper which applies the delay and failure rules.
 
-Install from npm:
-```js
+Installation
+
+```sh
 npm install fakesync
 ```
 
-Or require locally if testing:
-```js
-const fakesync = require('./index');
-```
-
-## API
-
-### `fakesync.registerDefaults(options)`
-
-Set global default options.
-
-- `options.minDelay`: Minimum delay in ms (default 0)
-- `options.maxDelay`: Maximum delay in ms (default 500)
-- `options.failRate`: Probability of rejection (0-1, default 0)
-
-### `fakesync.register(funcs, options)`
-
-Register functions to be wrapped.
-
-- `funcs`: Object with function names as keys and functions as values
-- `options`: Override options for these functions
-
-After registering, `fakesync.funcName()` returns a Promise that resolves with the original return value after a random delay, or rejects based on failRate.
-
-## Example
-
-See `example.js` for a complete example.
+Basic usage
 
 ```js
-const fakesync = require('fakesync');
+const fakesync = require('./index'); // or require('fakesync') when installed
 
 fakesync.registerDefaults({ minDelay: 100, maxDelay: 1000, failRate: 0.1 });
 
-function mySyncFunc(x) {
-  return x * 2;
+function getUser(id) {
+  return { id, name: 'Alice' };
 }
 
-fakesync.register({ mySyncFunc });
+// `api` contains the wrapped, Promise-returning functions
+const api = fakesync.register({ getUser });
 
+// call the wrapped function
 (async () => {
   try {
-    const result = await fakesync.mySyncFunc(5); // 10, after random delay
-    console.log(result);
+    const user = await api.getUser(1);
+    console.log(user);
   } catch (err) {
-    console.error('Function failed:', err);
+    console.error('Request failed:', err.message);
   }
 })();
 ```
 
-**please feel free to contribute 🙏**
+TypeScript
 
-**Updates Loading…**
+This package ships `index.d.ts` so TypeScript can infer the names and
+signatures of registered functions. `register` returns a strongly-typed
+object mapping your original functions to Promise-returning versions.
+
+Notes
+
+- `register` no longer mutates the exported `fakesync` object; it returns
+  a new API object. This keeps the exported module stable and improves
+  type safety.
+- Behavior: each wrapped function waits a random delay between `minDelay`
+  and `maxDelay` and rejects with `Error('Simulated failure')` with
+  probability `failRate`.
+
+Contributions
+
+Contributions and issues welcome. Create a PR or open an issue on GitHub.
