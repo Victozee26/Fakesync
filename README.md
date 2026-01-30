@@ -18,10 +18,11 @@ npm install fakesync
 Basic usage
 
 ```js
-const fakesync = require('./index'); // or require('fakesync') when installed
+const fakesync = require('fakesync'); // or require('./index') if installed locally
 
 fakesync.registerDefaults({ minDelay: 100, maxDelay: 1000, failRate: 0.1 });
 
+// your function
 function getUser(id) {
   return { id, name: 'Alice' };
 }
